@@ -1,30 +1,25 @@
-# 2d windows login design
+# Modern Notification Center (C# Desktop Application)
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+This project provides a notification system for Windows. It can be run in two modes:
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/mo-gawieshs-projects/v0-2d-windows-login-design)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/1HywgYxy9wL)
+## 1. Standalone Desktop Tray Application
 
-## Overview
+This mode runs an application directly in your system tray, displaying notifications and allowing you to view them in a dedicated window.
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+**How to run:**
+- Build the project (e.g., in Visual Studio or using `dotnet build`).
+- Run the main executable directly. This is typically found in a path like `bin/Debug/net6.0-windows/YourAppName.exe` (e.g., `NotificationCenter.exe` or `ModernNotificationCenter.exe` - **please verify the actual .exe name from your build output directory**).
+- The application icon will appear in the system tray.
 
-## Deployment
+## 2. Background Windows Service
 
-Your project is live at:
+This mode runs a background service that can generate notifications. This is useful for automated tasks or system-level alerts. The service component is named `NotificationCenterService` and its executable is `NotificationCenter.Service.exe`.
 
-**[https://vercel.com/mo-gawieshs-projects/v0-2d-windows-login-design](https://vercel.com/mo-gawieshs-projects/v0-2d-windows-login-design)**
+**How to install/uninstall the service:**
+- **To install:** Run `install-service.bat` as Administrator. This will install and start the `NotificationCenterService`.
+- **To uninstall:** Run `uninstall-service.bat` as Administrator. This will stop and remove the `NotificationCenterService`.
 
-## Build your app
+**Important:** The `.bat` files are *only* for managing the Windows Service mode using `NotificationCenter.Service.exe`. For the interactive tray application, run the main executable (e.g., `NotificationCenter.exe`) directly as described above.
 
-Continue building your app on:
-
-**[https://v0.dev/chat/projects/1HywgYxy9wL](https://v0.dev/chat/projects/1HywgYxy9wL)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+---
+This README replaces previous content that was unrelated to this C# desktop application.
