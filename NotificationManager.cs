@@ -140,6 +140,28 @@ namespace NotificationCenter.Service
                 _logger.LogError(ex, "Ошибка при загрузке уведомлений из базы данных");
             }
         }
+
+        public static void ShowSimpleToast(string title, string message, string appId = "NotificationCenter")
+        {
+            try
+            {
+                XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
+                XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
+                stringElements[0].AppendChild(toastXml.CreateTextNode(title));
+                stringElements[1].AppendChild(toastXml.CreateTextNode(message));
+
+                ToastNotification toast = new ToastNotification(toastXml);
+
+                // Basic error logging, as an instance logger isn't available in a static method easily.
+                // Consider a static logger if this becomes more complex.
+                ToastNotificationManager.CreateToastNotifier(appId).Show(toast);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in ShowSimpleToast: {ex.Message}");
+                Console.WriteLine($"Error in ShowSimpleToast: {ex.Message}"); // Fallback for non-debug environments
+            }
+        }
     }
 
     public class NotificationEventArgs : EventArgs

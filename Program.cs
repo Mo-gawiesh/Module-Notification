@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using NotificationCenter.Service; // Added for IconManager
 
 namespace NotificationCenter
 {
@@ -45,12 +46,15 @@ namespace NotificationCenter
         {
             contextMenu = new ContextMenuStrip();
             contextMenu.Items.Add("Открыть центр уведомлений", null, OpenMainWindow);
+            // TODO: Implement Settings window for ModernMainForm
+            contextMenu.Items.Add("Настройки", null, (s, e) => { /* Placeholder for Settings */ MessageBox.Show("Settings not yet implemented.", "Settings"); });
             contextMenu.Items.Add("-");
             contextMenu.Items.Add("Выход", null, ExitApplication);
 
             trayIcon = new NotifyIcon()
             {
-                Icon = CreateModernIcon(),
+                // Use IconManager from NotificationCenter.Service for potentially higher quality icons
+                Icon = IconManager.GetTrayIcon(notifications.Any(n => n.IsNew)),
                 Text = "Центр уведомлений",
                 ContextMenuStrip = contextMenu,
                 Visible = true
@@ -59,28 +63,7 @@ namespace NotificationCenter
             trayIcon.DoubleClick += (s, e) => OpenMainWindow(s, e);
         }
 
-        private Icon CreateModernIcon()
-        {
-            var bitmap = new Bitmap(32, 32);
-            using (var g = Graphics.FromImage(bitmap))
-            {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.Clear(Color.Transparent);
-                
-                // Teal circle background
-                g.FillEllipse(new SolidBrush(Color.FromArgb(26, 188, 156)), 2, 2, 28, 28);
-                
-                // White bell icon
-                g.DrawString("🔔", new Font("Segoe UI Emoji", 16), Brushes.White, 6, 4);
-                
-                // Red notification dot
-                if (notifications.Any(n => n.IsNew))
-                {
-                    g.FillEllipse(new SolidBrush(Color.FromArgb(231, 76, 60)), 20, 4, 10, 10);
-                }
-            }
-            return Icon.FromHandle(bitmap.GetHicon());
-        }
+        // CreateModernIcon is removed as we now use IconManager.GetTrayIcon
 
         private void AddSampleNotifications()
         {
@@ -145,7 +128,8 @@ namespace NotificationCenter
         private void UpdateTrayIcon()
         {
             trayIcon.Icon?.Dispose();
-            trayIcon.Icon = CreateModernIcon();
+            // Use IconManager from NotificationCenter.Service for potentially higher quality icons
+            trayIcon.Icon = IconManager.GetTrayIcon(notifications.Any(n => n.IsNew));
             
             int newCount = notifications.Count(n => n.IsNew);
             trayIcon.Text = newCount > 0 ? $"Центр уведомлений - {newCount} новых" : "Центр уведомлений";
@@ -172,7 +156,11 @@ namespace NotificationCenter
 
         private void ExitApplication(object sender, EventArgs e)
         {
-            trayIcon.Visible = false;
+            if (trayIcon != null)
+            {
+                trayIcon.Visible = false;
+                trayIcon.Dispose(); // Dispose the NotifyIcon
+            }
             Application.Exit();
         }
     }
