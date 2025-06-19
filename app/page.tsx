@@ -11,8 +11,8 @@ export default function Page() {
       {/* Desktop Content */}
       <div className="relative z-10 p-8">
         <div className="text-center text-white mb-8">
-          <h1 className="text-2xl font-bold mb-2">Рабочий стол Windows</h1>
-          <p className="text-blue-200">Виджет центра уведомлений в правом нижнем углу</p>
+          <h1 className="text-2xl font-bold mb-2"><br></h1>
+          <p className="text-blue-200"><br></p>
         </div>
 
         {/* Simulated Desktop Icons */}
